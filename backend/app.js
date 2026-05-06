@@ -7,26 +7,28 @@ const cors = require('cors');
 
 const app = express();
 
+
+app.use(cors({
+  origin: 'https://torchlab.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+
+app.options('*', cors());
+
+
 app.use(express.json());
+
 
 app.get('/', (req, res) => {
   res.send('API is running 🚀');
 });
 
-// Mounted here (before `/api` router) so `POST /api/salespeople` always resolves reliably.
-app.use('/api/salespeople', salespersonRouter);
 
+app.use('/api/salespeople', salespersonRouter);
 app.use('/api', router);
 
-
-app.use(
-    cors({
-        origin: "*",
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        allowHeaders: ["Content-Type", "Authorization"],
-        credentials: true, 
-    })
-)
 
 app.use(notFound);
 app.use(errorHandler);
